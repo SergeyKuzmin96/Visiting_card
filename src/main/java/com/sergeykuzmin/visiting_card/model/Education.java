@@ -14,10 +14,15 @@ public class Education {
     @Column(name = "type")
     private TypeOfEducation type;
 
-    @Column(name = "facility")
-    private String facility;
+    @Column(name = "organization")
+    private String organization;
 
-    @Column(name = "direction")
-    private String direction;
+    @Column(name = "specialization")
+    private String specialization;
+
+    @Column(name = "year")
+    private int year;
+
+
 
 }

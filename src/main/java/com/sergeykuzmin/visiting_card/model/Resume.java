@@ -25,7 +25,7 @@ public class Resume {
     private String patronymic;
 
     @Column(name = "gender")
-    private String gender;
+    private Gender gender;
 
     @Column(name = "birth_date")
     private LocalDate birthDate ;
@@ -64,12 +64,12 @@ public class Resume {
     public Resume() {
     }
 
-    public Resume(String firstName, String familyName, String patronymic, String gender, LocalDate bithDate, String phoneNumber, String email, BigDecimal expectedSalary) {
+    public Resume(String firstName, String familyName, String patronymic, Gender gender, LocalDate birthDate, String phoneNumber, String email, BigDecimal expectedSalary) {
         this.firstName = firstName;
         this.familyName = familyName;
         this.patronymic = patronymic;
-        this.gender = "Мужчина";
-        this.birthDate = LocalDate.of(1996, 5,6);
+        this.gender = gender;
+        this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.expectedSalary = expectedSalary;
@@ -79,6 +79,9 @@ public class Resume {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -104,10 +107,21 @@ public class Resume {
         this.patronymic = patronymic;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -131,9 +145,5 @@ public class Resume {
 
     public void setExpectedSalary(BigDecimal expectedSalary) {
         this.expectedSalary = expectedSalary;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
     }
 }
