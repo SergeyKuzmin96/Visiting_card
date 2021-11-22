@@ -25,7 +25,7 @@ public class Education {
     private String specialization;
 
     @Column(name = "year")
-    private int year;
+    private Integer year;
 
     public Education() {
     }
@@ -62,11 +62,11 @@ public class Education {
         this.specialization = specialization;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 }
