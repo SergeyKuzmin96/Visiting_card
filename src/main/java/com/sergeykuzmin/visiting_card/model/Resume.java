@@ -1,5 +1,8 @@
 package com.sergeykuzmin.visiting_card.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -8,10 +11,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "resume")
+@Proxy(lazy = false)
 public class Resume {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     @Column(name = "id")
     private Long id;
 
@@ -25,6 +30,7 @@ public class Resume {
     private String patronymic;
 
     @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Column(name = "birth_date")
@@ -39,20 +45,10 @@ public class Resume {
     @Column(name = "expected_salary")
     private BigDecimal expectedSalary;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "resume_id")
-    private List<Skill> skills;
-
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "resume_id")
     private List<Education> educations;
 
-    public void addSkill(Skill skill) {
-        if (skills == null) {
-            skills = new ArrayList<>();
-        }
-        skills.add(skill);
-    }
 
     public void addEducation(Education education) {
         if (education == null) {

@@ -1,9 +1,11 @@
 package com.sergeykuzmin.visiting_card.service;
 
+import com.querydsl.core.types.Predicate;
 import com.sergeykuzmin.visiting_card.dto.EducationFilter;
 import com.sergeykuzmin.visiting_card.model.Education;
 import com.sergeykuzmin.visiting_card.model.Resume;
 import com.sergeykuzmin.visiting_card.repository.EducationRepository;
+import com.sergeykuzmin.visiting_card.util.QPredicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,28 +13,38 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import static com.sergeykuzmin.visiting_card.model.QEducation.education;
+
 @Service
 public class EducationService {
 
     private final EducationRepository repository;
+    private final ResumeService resumeService;
 
     @Autowired
-    public EducationService(EducationRepository repository) {
+    public EducationService(EducationRepository repository, ResumeService resumeService) {
         this.repository = repository;
+
+        this.resumeService = resumeService;
     }
 
-    public Education addEducation(Education education, Resume resume) {
 
-        resume.addEducation(education);
-        repository.save(education);
-
-        return education;
+    public boolean addEducation(Education education) {
+        Resume resume = resumeService.getResume();
+        if (resume != null) {
+            resume.addEducation(education);
+            resumeService.saveResume(resume);
+            return true;
+        }
+        return false;
     }
+
 
     public Page<Education> getPageOfEducations(EducationFilter filter) {
-
-
-        return repository.findAll(getPagebale(filter));
+        if(needPredicate(filter)){
+            return repository.findAll(getPredicate(filter), getPagebale(filter));
+        }
+       return repository.findAll(getPagebale(filter));
     }
 
 
@@ -67,6 +79,20 @@ public class EducationService {
 
         return PageRequest.of(pageN, pageS, sort);
 
+    }
+
+    private boolean needPredicate(EducationFilter filter){
+        return filter.getYear() != null || filter.getSpecialization() != null || filter.getOrganization() != null || filter.getType() != null;
+    }
+
+    private Predicate getPredicate(EducationFilter filter) {
+
+        return QPredicate.builder()
+                .add(filter.getType(), education.type::eq)
+                .add(filter.getOrganization(), education.organization::containsIgnoreCase)
+                .add(filter.getSpecialization(), education.specialization::containsIgnoreCase)
+                .add(filter.getYear(), education.year::eq)
+                .buildAnd();
     }
 
 }

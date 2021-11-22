@@ -1,12 +1,7 @@
 package com.sergeykuzmin.visiting_card.model;
 
 public enum TypeOfEducation {
-    UNIVERSITY("Высшее образование"),
-    COURSES("Курсы");
+    UNIVERSITY,
+    COURSES;
 
-    private String name;
-
-    TypeOfEducation(String name) {
-        this.name = name;
-    }
 }

@@ -12,7 +12,7 @@ public class EducationFilter {
 
     private String specialization;
 
-    private int year;
+    private Integer year;
 
     private Integer pageNumber;
 
@@ -22,7 +22,7 @@ public class EducationFilter {
 
     private String sortBy ;
 
-    public EducationFilter(TypeOfEducation type, String organization, String specialization, int year, Integer pageNumber, Integer pageSize, String sortDirectional, String sortBy) {
+    public EducationFilter(TypeOfEducation type, String organization, String specialization, Integer year, Integer pageNumber, Integer pageSize, String sortDirectional, String sortBy) {
         this.type = type;
         this.organization = organization;
         this.specialization = specialization;
@@ -57,11 +57,11 @@ public class EducationFilter {
         this.specialization = specialization;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 

@@ -15,8 +15,8 @@ public class ResumeService {
         this.repository = repository;
     }
 
-    public Resume createResume(Resume resume){
-        if(getResume() == null){
+    public Resume saveResume(Resume resume){
+        if(repository.getCount() == 0 || resume.getId().equals(getResume().getId())){
             return repository.save(resume);
         }else{
             return getResume();
@@ -24,8 +24,10 @@ public class ResumeService {
     }
 
     public Resume getResume(){
-        return repository.getById(1);
+
+        return repository.getById(1L);
     }
+
 
 
 }
