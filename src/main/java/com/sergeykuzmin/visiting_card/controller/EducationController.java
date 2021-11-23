@@ -4,16 +4,20 @@ import com.sergeykuzmin.visiting_card.dto.EducationFilter;
 import com.sergeykuzmin.visiting_card.model.Education;
 import com.sergeykuzmin.visiting_card.model.TypeOfEducation;
 import com.sergeykuzmin.visiting_card.service.EducationService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
+@Validated
 @RestController
 @RequestMapping("/resume/education")
 @Tag(name = "Образование", description = "Доступ к списку образовательных программ")
@@ -31,7 +35,7 @@ public class EducationController {
             summary = "Получение списка образовательных программ",
             description = "Позволяет  получить список получение списка образовательных программ, согласно заданым параметрам"
     )
-    public Page<Education> findEducation(@RequestParam(value = "type", required = false) @Parameter(description = "Тип образовательной программы") TypeOfEducation type,
+    public Page<Education> findEducation(@RequestParam(value = "type", required = false) @Parameter(description = "Тип образовательной программы") @Valid TypeOfEducation type,
                                          @RequestParam(value = "organization", required = false) @Parameter(description = "Аттестующия организация") String organization,
                                          @RequestParam(value = "specialization", required = false) @Parameter(description = "Специализация") String specialization,
                                          @RequestParam(value = "year", required = false) @Parameter(description = "Год окончания") Integer year,
@@ -45,13 +49,17 @@ public class EducationController {
         return service.getPageOfEducations(filter);
     }
 
-    @PostMapping
+    @PostMapping("/new")
     @Operation(
-            summary = "Добавление образования",
+            summary = "Добавление образовательной программы",
             description = "Позволяет добавить в резюме образовательную программу"
     )
-    public ResponseEntity createProgram(@RequestBody Education education){
+    public ResponseEntity createProgram(@RequestBody  @Valid Education education, BindingResult bindingResult){
 
+        if(bindingResult.hasErrors()){
+
+            return new ResponseEntity<>("Неверный формат данных", HttpStatus.BAD_REQUEST);
+        }
         if(service.addEducation(education)){
             return new ResponseEntity<>(education, HttpStatus.CREATED);
         }

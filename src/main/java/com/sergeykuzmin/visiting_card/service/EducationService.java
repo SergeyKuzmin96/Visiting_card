@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import static com.sergeykuzmin.visiting_card.model.QEducation.education;
 
 @Service
+
 public class EducationService {
 
     private final EducationRepository repository;
@@ -23,6 +24,7 @@ public class EducationService {
 
     @Autowired
     public EducationService(EducationRepository repository, ResumeService resumeService) {
+
         this.repository = repository;
 
         this.resumeService = resumeService;
@@ -30,6 +32,7 @@ public class EducationService {
 
 
     public boolean addEducation(Education education) {
+
         Resume resume = resumeService.getResume();
         if (resume != null) {
             resume.addEducation(education);
@@ -41,7 +44,9 @@ public class EducationService {
 
 
     public Page<Education> getPageOfEducations(EducationFilter filter) {
+
         if(needPredicate(filter)){
+
             return repository.findAll(getPredicate(filter), getPagebale(filter));
         }
        return repository.findAll(getPagebale(filter));
@@ -53,6 +58,7 @@ public class EducationService {
 
         if (filter.getSortBy() != null && filter.getSortBy().equalsIgnoreCase("type")) {
             sortBy = "type";
+
         } else {
             sortBy = "year";
         }
@@ -69,9 +75,11 @@ public class EducationService {
         Integer pageS = 5;
 
         if (filter.getPageNumber() != null) {
+
             pageN = filter.getPageNumber();
         }
         if (filter.getPageSize() != null) {
+
             pageS = filter.getPageSize();
         }
 
@@ -82,6 +90,7 @@ public class EducationService {
     }
 
     private boolean needPredicate(EducationFilter filter){
+
         return filter.getYear() != null || filter.getSpecialization() != null || filter.getOrganization() != null || filter.getType() != null;
     }
 

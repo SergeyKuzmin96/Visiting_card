@@ -2,8 +2,6 @@ package com.sergeykuzmin.visiting_card.dto;
 
 import com.sergeykuzmin.visiting_card.model.TypeOfEducation;
 
-import javax.persistence.Column;
-
 public class EducationFilter {
 
     private TypeOfEducation type;

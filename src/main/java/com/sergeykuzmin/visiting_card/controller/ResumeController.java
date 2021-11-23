@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/resume")
 @Tag(name = "Резюме", description = "Доступ к резюме")
@@ -19,11 +20,11 @@ public class ResumeController {
         this.service = resumeService;
     }
 
-    @PostMapping()
+    @PostMapping("/new")
     @Operation(
             summary = "Создание резюме"
     )
-    public Resume createResume(@RequestBody Resume resume) {
+    public Resume createResume(@RequestBody  Resume resume) {
         return service.saveResume(resume);
     }
 
