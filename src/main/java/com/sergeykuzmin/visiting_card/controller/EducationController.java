@@ -7,6 +7,8 @@ import com.sergeykuzmin.visiting_card.service.EducationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,8 @@ import javax.validation.Valid;
 @Tag(name = "Образование", description = "Доступ к списку образовательных программ")
 public class EducationController {
 
+    private final static Logger logger = LoggerFactory.getLogger(EducationController.class);
+
     private final EducationService service;
 
     @Autowired
@@ -35,7 +39,7 @@ public class EducationController {
             summary = "Получение списка образовательных программ",
             description = "Позволяет  получить список получение списка образовательных программ, согласно заданым параметрам"
     )
-    public Page<Education> findEducation(@RequestParam(value = "type", required = false) @Parameter(description = "Тип образовательной программы") @Valid TypeOfEducation type,
+    public Page<Education> findEducation(@RequestParam(value = "type", required = false) @Parameter(description = "Тип образовательной программы") TypeOfEducation type,
                                          @RequestParam(value = "organization", required = false) @Parameter(description = "Аттестующия организация") String organization,
                                          @RequestParam(value = "specialization", required = false) @Parameter(description = "Специализация") String specialization,
                                          @RequestParam(value = "year", required = false) @Parameter(description = "Год окончания") Integer year,
@@ -58,11 +62,16 @@ public class EducationController {
 
         if(bindingResult.hasErrors()){
 
+            logger.error("Переданны не валидные данные");
             return new ResponseEntity<>("Неверный формат данных", HttpStatus.BAD_REQUEST);
         }
         if(service.addEducation(education)){
+
+            logger.info("Образовательная программа успешно добавлена");
             return new ResponseEntity<>(education, HttpStatus.CREATED);
         }
+
+        logger.info("В базе данных отсутствует резюме");
         return new ResponseEntity<>("Резюме отсутствует", HttpStatus.BAD_REQUEST);
     }
 
